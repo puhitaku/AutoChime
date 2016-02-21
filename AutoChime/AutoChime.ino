@@ -11,9 +11,9 @@ TickerScheduler ts(3);
 
 void setup() {
   Serial.begin(115200);
-
-  chime.SetChimeDirection(1460, 1570, 1680);
-  chime.SetHammerDirection(1070, 2050);
+  
+  chime.SetChimeDirection(1460, 1560, 1680);
+  chime.SetHammerDirection(985, 1510);
   
   ntp.BeginWiFi(ssid, pass, true);
   ntp.BeginNtp(ntp_server, 3939, true);
@@ -38,6 +38,7 @@ void loop() {
   ts.update();
   if(Serial.available() > 0) {
     chime.AttachAll();
+    delay(500);
     int cmd = Serial.parseInt();
     switch(cmd) {
       case 0:
