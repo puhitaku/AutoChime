@@ -5,8 +5,9 @@ using namespace std;
 
 void testServo(Chime chime, Serv servo_id) {
   int v = 0;
-  while(v != -1) {
+  while(true) {
     v = WaitParseInt(Serial);
+    if(v == -1) { break; };
     Serial.printf("Sending %d[us]...\n", v);
     chime.MoveServo(servo_id, v);
   }
@@ -14,8 +15,9 @@ void testServo(Chime chime, Serv servo_id) {
 
 void testTone(bool isShort) {
   int v = 0;
-  while(v != -1) {
+  while(true) {
     v = WaitParseInt(Serial);
+    if(v == -1) { break; };
     Serial.printf("Ringing tone %d...\n", v);
     chime.Ring(Tone::Mid, isShort, true);
   }
