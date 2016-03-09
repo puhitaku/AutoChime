@@ -12,18 +12,18 @@ TickerScheduler ts(3);
 void setup() {
   Serial.begin(115200);
   
-  chime.SetChimeDirection(1460, 1560, 1680);
-  chime.SetHammerDirection(985, 1510);
-  
   ntp.BeginWiFi(ssid, pass, true);
   ntp.BeginNtp(ntp_server, 3939, true);
 
   setSyncProvider([&]{ return ntp.GetNtpTime(timezone, true); });
   setSyncInterval(60 * 60);
-  Serial.printf("Now: %02d:%02d:%02d\n", hour(), minute(), second());
+  Serial.printf("%d/%02d/%02d ", year(), month(), day());
+  Serial.printf("%02d:%02d:%02d\n", hour(), minute(), second());
   delay(500);
 
-  chime.AddWork(2, 41, 0, time_signal);
+  chime.SetChimeDirection(1460, 1560, 1680);
+  chime.SetHammerDirection(975, 1510);
+
   chime.AddWork(10, 0, 0, time_signal);
   chime.AddWork(15, 0, 0, mid_once);
   chime.AddWork(18, 0, 0, high_once);
