@@ -9,7 +9,6 @@ Chime::Chime(char pin1, char pin2) {
 void Chime::SetPinNumber(char pin1, char pin2) {
   servo_pin_[(char)Serv::Big] = pin1;
   servo_pin_[(char)Serv::Small] = pin2;
-  AttachAll();
 }
 
 void Chime::SetChimeDirection(int pos1, int pos2, int pos3) {
@@ -57,6 +56,7 @@ void Chime::Ring(Tone tone, bool is_short, bool wait_for_move) {
     delay(230);
   }
   MoveServo(Serv::Small, hammer_dir_release_);
+  delay(300);
 }
 
 void Chime::PlayScore(int score_index, int before_delay_ms) {
@@ -65,7 +65,7 @@ void Chime::PlayScore(int score_index, int before_delay_ms) {
     Serial.printf("Tone: %d, IsShort: %d\n", note.GetTone(), note.GetIsShort());
     Ring(note.GetTone(), note.GetIsShort(), false);
     if(note.GetIsShort()) {
-      delay(300);
+      delay(1);
     } else {
       delay(570);
     }
