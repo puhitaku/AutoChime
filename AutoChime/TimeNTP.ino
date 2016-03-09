@@ -5,7 +5,11 @@
 
 
 bool TimeNTP::BeginWiFi(const char* ssid, const char* pass, bool debug) {
-  if(debug) { Serial.printf("Connecting to %s\n", ssid); }
+  if(debug) {
+    Serial.println("Setting AP Mode.");
+    WiFi.mode(WIFI_STA);
+    Serial.printf("Connecting to %s\n", ssid);
+  }
   this -> begin(ssid, pass);
   while(this -> status() != WL_CONNECTED) {
     delay(100);
