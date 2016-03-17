@@ -7,7 +7,7 @@ Score time_signal({
   NoteS(Tone::Mid, 1),
   NoteS(Tone::Mid, 1),
   NoteS(Tone::Mid, 1),
-  NoteL(Tone::High, 10)
+  NoteL(Tone::High, 1)
 });
 
 Score mid_once({
