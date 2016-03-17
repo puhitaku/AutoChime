@@ -1,7 +1,6 @@
 #include <Servo.h>
 #include "class.h"
 
-
 Chime::Chime(char pin1, char pin2) {
   SetPinNumber(pin1, pin2);
 }
@@ -23,9 +22,17 @@ void Chime::SetHammerDirection(int touch, int release) {
   MoveServo(Serv::Small, hammer_dir_release_);
 }
 
+void Chime::InitHammer() {
+  AttachAll();
+  MoveServo(Serv::Big, chime_dir_[(char)Tone::Mid]);
+  MoveServo(Serv::Small, hammer_dir_release_);
+  DetachAll();
+}
+
 void Chime::Attach(Serv servo_id) {
   char pin = servo_pin_[(char)servo_id];
   servo_[(char)servo_id].attach(pin);
+  delay(100);  //100ms is needed at least
 }
 
 void Chime::AttachAll() {
@@ -61,6 +68,7 @@ void Chime::Ring(Tone tone, bool is_short, bool wait_for_move) {
 
 void Chime::PlayScore(int score_index, int before_delay_ms) {
   delay(before_delay_ms);
+  AttachAll();
   for(auto note: score_book_[score_index].notes) {
     Serial.printf("Tone: %d, IsShort: %d\n", note.GetTone(), note.GetIsShort());
     Ring(note.GetTone(), note.GetIsShort(), false);
@@ -70,11 +78,29 @@ void Chime::PlayScore(int score_index, int before_delay_ms) {
       delay(570);
     }
   }
+  DetachAll();
 }
 
 void Chime::AddWork(char hour, char minute, char second, Score score) {
   work_time_.push_back(GetUnbiasedTime(hour, minute, second));
   score_book_.push_back(score);
+}
+
+void Chime::TsWaitLong(TickerScheduler& ts) {
+  int index = chime.isIncoming(15);
+  if(index >= 0) {
+    ts.add(1, 100, [&]{ TsWaitShort(ts); }, true);
+  }
+}
+
+void Chime::TsWaitShort(TickerScheduler& ts) {
+  int index = chime.isIncoming(4);
+  if(index >= 0) {
+    ts.remove(0);
+    ts.remove(1);
+    chime.PlayScore(index, 500);
+    ts.add(0, 5000, [&]{ TsWaitLong(ts); }, false);
+  }
 }
 
 int Chime::isIncoming(int prior_sec) {

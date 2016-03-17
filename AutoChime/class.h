@@ -3,6 +3,7 @@
 #include <WiFiUdp.h>
 #include <Servo.h>
 #include <Time.h>
+#include <TickerScheduler.h>
 #include <vector>
 using namespace std;
 
@@ -41,11 +42,11 @@ class Score {
 
 class Chime {
   public:
-    Chime() {};
     Chime(char pin1, char pin2);
     void SetPinNumber(char pin1, char pin2);
     void SetChimeDirection(int pin1, int pin2, int pin3);
     void SetHammerDirection(int touch, int release);
+    void InitHammer();
 
     void Attach(Serv servo_id);
     void Detach(Serv servo_id);
@@ -57,6 +58,8 @@ class Chime {
     void PlayScore(int score_index, int delay_before_ms);
     void AddWork(char hour, char minute, char second, Score score);
 
+    void TsWaitLong(TickerScheduler& ts);
+    void TsWaitShort(TickerScheduler& ts);
     int isIncoming(int prior_sec);
 
   private:
