@@ -24,7 +24,7 @@ void testTone(bool isShort) {
 }
 
 void testScore(Chime chime) {
-  chime.PlayScore(0, 0);
+  chime.PlayScore(0);
 }
 
 int WaitParseInt(HardwareSerial& serial) {

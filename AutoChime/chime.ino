@@ -59,24 +59,22 @@ void Chime::Ring(Tone tone, bool is_short, bool wait_for_move) {
   MoveServo(Serv::Small, hammer_dir_touch_);
   if(is_short) {
     delay(500);
+    MoveServo(Serv::Small, hammer_dir_release_);
+    delay(300);
   } else {
     delay(230);
+    MoveServo(Serv::Small, hammer_dir_release_);
+    delay(570);
   }
-  MoveServo(Serv::Small, hammer_dir_release_);
-  delay(300);
 }
 
-void Chime::PlayScore(int score_index, int before_delay_ms) {
-  delay(before_delay_ms);
+void Chime::PlayScore(int score_index) {
+  int play_time = score_book_[score_index].GetTimeLength() * 1000;
+  delay(5000 - play_time - 100 + 500);  //-100ms = Attach time, 500ms = Adjustment
   AttachAll();
   for(auto note: score_book_[score_index].notes) {
     Serial.printf("Tone: %d, IsShort: %d\n", note.GetTone(), note.GetIsShort());
     Ring(note.GetTone(), note.GetIsShort(), false);
-    if(note.GetIsShort()) {
-      delay(1);
-    } else {
-      delay(570);
-    }
   }
   DetachAll();
 }
@@ -94,11 +92,11 @@ void Chime::TsWaitLong(TickerScheduler& ts) {
 }
 
 void Chime::TsWaitShort(TickerScheduler& ts) {
-  int index = chime.isIncoming(4);
+  int index = chime.isIncoming(5);
   if(index >= 0) {
     ts.remove(0);
     ts.remove(1);
-    chime.PlayScore(index, 500);
+    chime.PlayScore(index);
     ts.add(0, 5000, [&]{ TsWaitLong(ts); }, false);
   }
 }
@@ -106,17 +104,22 @@ void Chime::TsWaitShort(TickerScheduler& ts) {
 int Chime::isIncoming(int prior_sec) {
   for(int i=0; i<work_time_.size(); i++) {
     long int diff = GetUnbiasedTime(hour(), minute(), second()) - work_time_[i];
-    Serial.printf("Work Time[%d] = %u, diff = %d[sec]\n", i, work_time_[i], diff);
+    TimeElements tm;
+    breakTime(work_time_[i], tm);
+    Serial.printf("%02d:%02d:%02d\n", hour(), minute(), second());
+    Serial.printf("Work[%d]: %d:%d:%d, ", i, tm.Hour, tm.Minute, tm.Second);
+    Serial.printf("diff = %d[sec]\n", diff);
     if(-prior_sec <= diff && diff <= 0) {
       return i;
     }
   }
+  Serial.println();
   return -1;
 }
 
 time_t Chime::GetUnbiasedTime(int hour, int minute, int second) {
   TimeElements tm;
   tm.Second = second; tm.Minute = minute; tm.Hour = hour;
-  tm.Day = tm.Month = 1; tm.Year = 2016;
+  tm.Day = tm.Month = 1; tm.Year = 39;
   return makeTime(tm);
 }

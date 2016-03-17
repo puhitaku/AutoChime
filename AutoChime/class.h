@@ -55,7 +55,7 @@ class Chime {
     void MoveServo(Serv servo_id, int us);
     void Ring(Tone tone, bool is_short, bool wait_for_move);
 
-    void PlayScore(int score_index, int delay_before_ms);
+    void PlayScore(int score_index);
     void AddWork(char hour, char minute, char second, Score score);
 
     void TsWaitLong(TickerScheduler& ts);
