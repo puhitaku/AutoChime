@@ -69,7 +69,7 @@ void Chime::Ring(Tone tone, bool is_short, bool wait_for_move) {
 }
 
 void Chime::PlayScore(int score_index) {
-  int play_time = score_book_[score_index].GetTimeLength() * 1000;
+  int play_time = score_book_[score_index].GetTimeLength() * 1050;
   delay(5000 - play_time - 100 + 500);  //-100ms = Attach time, 500ms = Adjustment
   AttachAll();
   for(auto note: score_book_[score_index].notes) {
