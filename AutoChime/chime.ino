@@ -55,14 +55,14 @@ void Chime::MoveServo(Serv servo_id, int us) {
 
 void Chime::Ring(Tone tone, bool is_short, bool wait_for_move) {
   MoveServo(Serv::Big, chime_dir_[(char)tone]);
-  delay(200);
+  delay(300);
   MoveServo(Serv::Small, hammer_dir_touch_);
   if(is_short) {
-    delay(500);
+    delay(400);
     MoveServo(Serv::Small, hammer_dir_release_);
     delay(300);
   } else {
-    delay(230);
+    delay(130);
     MoveServo(Serv::Small, hammer_dir_release_);
     delay(570);
   }
