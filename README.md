@@ -1,2 +1,2 @@
 # AutoChime
-Physical auto chime.
+Auto chime with MicroPython.
