@@ -40,7 +40,7 @@ class TimeKeeper:
         for i, task in enumerate(self.tasks):
             t = (now[0], now[1], now[2], task.hour, task.minute, 0, 0, 0)
             d = time.mktime(t) - time.mktime(now)
-            print('Next {i:02d}: {t}\nDiff {i}:{d}'.format(i=i+1, t=t, d=d))
+            print('Next {i:02d}: {t}\nDiff {i:02d}:{d}'.format(i=i+1, t=t, d=d))
 
             if d >= 0 and d < 10:
                 print('Triggering!')
