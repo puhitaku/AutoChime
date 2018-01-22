@@ -61,7 +61,7 @@ class ServoController:
 
     _tone_duty = {
         'l': 342,
-        'm': 320,
+        'm': 318,
         'h': 293}
 
     _mallet_duty = {
@@ -153,6 +153,8 @@ def sync_with_ntp():
 
 def main():
     s = ServoController(13, 5)
+    time.sleep(0.5)
+    s.morning()
 
     t = TimeKeeper()
     t.add_task(1, 0, s.morning, offset=-4)
